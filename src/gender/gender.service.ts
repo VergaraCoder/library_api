@@ -32,8 +32,14 @@ export class GenderService {
     return gendersId;
   }
 
-  update(id: number, updateGenderDto: UpdateGenderDto) {
-    return `This action updates a #${id} gender`;
+    async findOne2(id: number) {
+      const returnGender=await this.genderRepository.findOne({where:{id:id}});
+      return returnGender;
+    }
+
+  async update(id: number, updateGenderDto: UpdateGenderDto) {
+    const dataReturn=await this.findOne2(id);
+    const updateLog=await this.genderRepository.update(dataReturn.id,updateGenderDto);
   }
 
   async remove(id: number) {

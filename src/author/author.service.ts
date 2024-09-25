@@ -34,8 +34,10 @@ export class AuthorService {
   }
 
 
-  update(id: number, updateAuthorDto: UpdateAuthorDto) {
-    return `This action updates a #${id} author`;
+  async update(id: number, updateAuthorDto: UpdateAuthorDto) {
+    const dataReturn=await this.findOne2(id);
+    const updateLog=await this.authorRepository.update(dataReturn.id,updateAuthorDto);
+    return updateLog;
   }
 
   async remove(id: number) {

@@ -34,8 +34,9 @@ export class BookService {
     return returnOneBook;
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: string, updateBookDto: Partial<Book>) {
+    const dataReturn=await this.findOne(id);
+    const updateLog=await this.bookRepository.update(dataReturn.id,updateBookDto);
   }
 
   async remove(id: string) {
