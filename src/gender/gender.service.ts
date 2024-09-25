@@ -4,6 +4,7 @@ import { UpdateGenderDto } from './dto/update-gender.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Gender } from './entities/gender.entity';
 import { Repository } from 'typeorm';
+import { errorManage } from 'src/common/err/error.manage.error';
 
 @Injectable()
 export class GenderService {
@@ -16,30 +17,63 @@ export class GenderService {
   }
 
   async findAll() {
-    return await this.genderRepository.find();
+    try{
+    const data=await this.genderRepository.find();
+    if(!data){
+      throw new errorManage({
+        type:"NOT_FOUND",
+        message:"Registers not found"
+      });
+    }
+    return data;
+    }catch(err:any){
+      throw errorManage.errorSignature(err.message);
+    }
   }
 
   async findOne(genders: string[]) {
-    let gendersId=[];
+    try{
+      let gendersId=[];
     for(const gender of genders){
       const returnGender=await this.genderRepository.findOne({where:{name_gender:gender}});
       if(!returnGender){
-
+        throw new errorManage({
+          type:"BAD_REQUEST",
+          message:"some gender not exist"
+        });
       }else{
         gendersId.push(returnGender.id);
       }
     }
     return gendersId;
+    }catch(err:any){
+      throw errorManage.errorSignature(err.message);
+    }
   }
 
     async findOne2(id: number) {
-      const returnGender=await this.genderRepository.findOne({where:{id:id}});
-      return returnGender;
+      try{
+          const returnGender=await this.genderRepository.findOne({where:{id:id}});
+          if(!returnGender){
+            throw new errorManage({
+              type:"NOT_FOUND",
+              message:"Incorrect credentials"
+            });
+          }
+        return returnGender;
+      }catch(err:any){
+        throw errorManage.errorSignature(err.message);
+      }
     }
 
   async update(id: number, updateGenderDto: UpdateGenderDto) {
-    const dataReturn=await this.findOne2(id);
-    const updateLog=await this.genderRepository.update(dataReturn.id,updateGenderDto);
+    try{
+      const dataReturn=await this.findOne2(id);
+      const updateLog=await this.genderRepository.update(dataReturn.id,updateGenderDto);
+      return updateLog;
+    }catch(err:any){
+      throw errorManage.errorSignature(err.message);
+    }
   }
 
   async remove(id: number) {

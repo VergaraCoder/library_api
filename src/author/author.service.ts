@@ -4,6 +4,7 @@ import { UpdateAuthorDto } from './dto/update-author.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Author } from './entities/author.entity';
 import { Repository } from 'typeorm';
+import { errorManage } from 'src/common/err/error.manage.error';
 
 @Injectable()
 export class AuthorService {
@@ -14,30 +15,64 @@ export class AuthorService {
       const createAuthor=this.authorRepository.create(createAuthorDto);
       return this.authorRepository.save(createAuthor);
     }catch(err:any){
-      
+      throw errorManage.errorSignature(err.message);
     }
   }
 
   async findAll() {
-    return await this.authorRepository.find();
+    try{
+      const data=await this.authorRepository.find();
+      if(!data){
+      throw new errorManage({
+        type:"NOT_FOUND",
+        message:"Authores not found"
+      });
+    }
+    }catch(err:any){
+      throw errorManage.errorSignature(err.message);
+    }
   }
 
   async findOne(name: string) {
-    const dataAuthor=await this.authorRepository.findOne({where:{name:name}})// exmaple i must remove of here
+    try{
+      const dataAuthor=await this.authorRepository.findOne({where:{name:name}});
+      if(!dataAuthor){
+        throw new errorManage({
+          type:"NOT_FOUND",
+          message:"Incorret credentials"
+        });
+      }
     return dataAuthor;
+    }catch(err:any){
+      throw errorManage.errorSignature(err.message);
+    }
   }
 
 
     async findOne2(id:number) {
-    const dataAuthor=await this.authorRepository.findOne({where:{id:id}})// exmaple i must remove of here
-    return dataAuthor;
+    try{
+      const dataAuthor=await this.authorRepository.findOne({where:{id:id}});
+      if(!dataAuthor){
+        throw new errorManage({
+          type:"NOT_FOUND",
+          message:"Incorrect credentials"
+        });
+      }
+      return dataAuthor;
+    }catch(err:any){
+      throw errorManage.errorSignature(err.message);
+    }
   }
 
 
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {
-    const dataReturn=await this.findOne2(id);
-    const updateLog=await this.authorRepository.update(dataReturn.id,updateAuthorDto);
-    return updateLog;
+    try{
+      const dataReturn=await this.findOne2(id);
+      const updateLog=await this.authorRepository.update(dataReturn.id,updateAuthorDto);
+      return updateLog;
+    }catch(err:any){
+      throw errorManage.errorSignature(err.message);
+    }
   }
 
   async remove(id: number) {
