@@ -38,8 +38,9 @@ export class AuthorService {
     return `This action updates a #${id} author`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} author`;
+  async remove(id: number) {
+    const dataDelete=await this.authorRepository.delete({id:id});
+    return dataDelete;
   }
 
 

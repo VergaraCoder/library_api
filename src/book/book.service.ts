@@ -38,7 +38,8 @@ export class BookService {
     return `This action updates a #${id} book`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async remove(id: string) {
+    const dataDelete=await this.bookRepository.delete({id:id});
+    return dataDelete;
   }
 }

@@ -36,7 +36,8 @@ export class GenderService {
     return `This action updates a #${id} gender`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gender`;
+  async remove(id: number) {
+    const dataDelete=await this.genderRepository.delete({id:id});
+    return dataDelete;
   }
 }
