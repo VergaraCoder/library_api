@@ -16,11 +16,11 @@ export class Book {
     @Column()
     authorId:number;
 
-    @ManyToOne(()=>Author,author=>author.book)
+    @ManyToOne(()=>Author,author=>author.book,{eager:true})
     @JoinColumn({name:"authorId"})
     author:Author;
 
-    @ManyToMany(()=>Gender)
+    @ManyToMany(()=>Gender,{eager:true})
     @JoinTable()
     gender:Gender[];
 }

@@ -8,8 +8,12 @@ export class AuthorController {
   constructor(private readonly authorService: AuthorService) {}
 
   @Post()
-  create(@Body() createAuthorDto: CreateAuthorDto) {
-    return this.authorService.create(createAuthorDto);
+  async create(@Body() createAuthorDto: CreateAuthorDto) {
+    try{
+    const dataAuthor= await this.authorService.create(createAuthorDto);
+    return dataAuthor;
+    }catch(err:any){
+    }
   }
 
   @Get()

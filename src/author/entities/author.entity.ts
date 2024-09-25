@@ -10,7 +10,7 @@ export class Author {
     name:string;
 
     @Column()
-    age:string;
+    age:number;
 
     @Column()
     published_books:number;

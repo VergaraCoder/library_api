@@ -12,5 +12,10 @@ export class CreateAuthorDto {
     @IsNumber()
     @IsNotEmpty()
     age:number;
+
+    @ApiProperty({example:2})
+    @IsNumber()
+    @IsNotEmpty()
+    published_books:number;
     
 }
