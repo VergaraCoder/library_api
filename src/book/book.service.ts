@@ -25,12 +25,13 @@ export class BookService {
     return createBook;
   }
 
-  findAll() {
-    return `This action returns all book`;
+  async findAll() {
+    return await this.bookRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} book`;
+  async findOne(id: string) {
+    const returnOneBook=await this.bookRepository.findOne({where:{id:id}});
+    return returnOneBook;
   }
 
   update(id: number, updateBookDto: UpdateBookDto) {

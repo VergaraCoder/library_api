@@ -15,8 +15,8 @@ export class GenderService {
     return createGender;
   }
 
-  findAll() {
-    return `This action returns all gender`;
+  async findAll() {
+    return await this.genderRepository.find();
   }
 
   async findOne(genders: string[]) {

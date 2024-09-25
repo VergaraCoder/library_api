@@ -18,13 +18,21 @@ export class AuthorService {
     }
   }
 
-  findAll() {
-    return `This action returns all author`;
+  async findAll() {
+    return await this.authorRepository.find();
   }
 
-  findOne(id: any) {
-    return {id:2}; // exmaple i must remove of here
+  async findOne(name: string) {
+    const dataAuthor=await this.authorRepository.findOne({where:{name:name}})// exmaple i must remove of here
+    return dataAuthor;
   }
+
+
+    async findOne2(id:number) {
+    const dataAuthor=await this.authorRepository.findOne({where:{id:id}})// exmaple i must remove of here
+    return dataAuthor;
+  }
+
 
   update(id: number, updateAuthorDto: UpdateAuthorDto) {
     return `This action updates a #${id} author`;
@@ -33,4 +41,7 @@ export class AuthorService {
   remove(id: number) {
     return `This action removes a #${id} author`;
   }
+
+
+
 }
