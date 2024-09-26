@@ -9,11 +9,8 @@ export class AuthorController {
 
   @Post()
   async create(@Body() createAuthorDto: CreateAuthorDto) {
-    try{
     const dataAuthor= await this.authorService.create(createAuthorDto);
     return dataAuthor;
-    }catch(err:any){
-    }
   }
 
   @Get()
