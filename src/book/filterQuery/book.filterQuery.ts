@@ -13,10 +13,11 @@ export class FilterBookService{
     }
 
     async filterData(query:SelectQueryBuilder<Book>,querys:any){
-        if(querys.gender){
-            console.log("el nombre del genero es ");
-                console.log(querys.gender);
-                
+        if(querys.title){
+            console.log("entramos");
+            query.andWhere("books.title=:titleName",{titleName:querys.title});
+        }
+        if(querys.gender){              
             query.innerJoinAndSelect("books.gender","genders");
             query.andWhere("genders.name_gender=:nameGender",{nameGender:querys.gender});
         }
@@ -39,6 +40,7 @@ export class FilterBookService{
             query.orderBy("books.title",upperletterSort);
         }
         
+        query.innerJoinAndSelect("books.gender","gender")
         return await query.getMany();
     }
 

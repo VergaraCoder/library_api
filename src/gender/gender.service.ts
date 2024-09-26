@@ -42,7 +42,7 @@ export class GenderService {
           message:"some gender not exist"
         });
       }else{
-        gendersId.push(returnGender.id);
+        gendersId.push(returnGender);
       }
     }
     return gendersId;

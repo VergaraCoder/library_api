@@ -16,6 +16,8 @@ export class BookController {
 
   @Get()
   asyncfindAll(
+    @Query("title") title:string,
+    @Query("date") date:Date,
     @Query("page") pagination:number, 
     @Query("limit") limit :number,
     @Query("gender") gender:string,
@@ -23,14 +25,10 @@ export class BookController {
     @Query("authorName") author:string,
     @Query("authorId") authorId:number 
   ) {
-
-    console.log(author);
-    console.log(gender);
-    console.log(limit);
-    // console.log(gender);
-    // console.log(gender);
-    
+ 
     return this.bookService.findAll({
+      date:date,
+      title:title,
       page:pagination,
       limit:limit,
       gender:gender,
