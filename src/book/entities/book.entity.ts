@@ -20,7 +20,8 @@ export class Book {
     @JoinColumn({name:"authorId"})
     author:Author;
 
-    @ManyToMany(()=>Gender,{eager:true})
+    @ManyToMany(()=>Gender, (gender) => gender.books, { eager: true })
     @JoinTable()
     gender:Gender[];
+
 }

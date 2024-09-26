@@ -5,12 +5,12 @@ export class errorManage extends Error{
         super(`${type} :: ${message}`);
     }
 
-    static errorSignature(message:any){
+    static errorSignature(message:string){
         const name=message.split(" :: ")[0];
-        if(name){
-            throw new HttpException(HttpStatus[name],message);
-        }else{
-            throw new HttpException("INTERNAL SERVER ERROR", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        if (name) {
+            throw new HttpException(message, HttpStatus[name]);
+          } else {
+            throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+          }
     }
 }

@@ -42,7 +42,8 @@ export class AuthorService {
           message:"Incorret credentials"
         });
       }
-    return dataAuthor;
+      await this.updateNumberOfBook(dataAuthor);
+      return dataAuthor;
     }catch(err:any){
       throw errorManage.errorSignature(err.message);
     }
@@ -72,6 +73,18 @@ export class AuthorService {
       return updateLog;
     }catch(err:any){
       throw errorManage.errorSignature(err.message);
+    }
+  }
+
+
+  async updateNumberOfBook(dataAuthor:any){
+    try{
+      const update=await this.authorRepository.update(dataAuthor.id,{
+        published_books:dataAuthor.published_books+1
+      });
+      return update;
+    }catch(err:any){
+      throw err;
     }
   }
 

@@ -7,15 +7,22 @@ import { Repository } from 'typeorm';
 import { AuthorService } from 'src/author/author.service';
 import { GenderService } from 'src/gender/gender.service';
 import { errorManage } from 'src/common/err/error.manage.error';
+import { FilterBookService } from './filterQuery/book.filterQuery';
 
 @Injectable()
 export class BookService {
-  constructor(@InjectRepository(Book) private bookRepository:Repository<Book>, private authorService:AuthorService, private genderService:GenderService){}
+  constructor(@InjectRepository(Book) private bookRepository:Repository<Book>, private authorService:AuthorService, private genderService:GenderService,
+  private bookFilter:FilterBookService
+
+){}
 
   async create(createBookDto: CreateBookDto) {
     const returnAuthor=await this.authorService.findOne(createBookDto.author);
     const genders=await this.genderService.findOne(createBookDto.gender);
 
+    console.log("los generos son");
+    console.log(genders);
+    
     const createBook=this.bookRepository.create({
       title:createBookDto.title,
       authorId:returnAuthor.id,
@@ -26,16 +33,16 @@ export class BookService {
     return createBook;
   }
 
-  async findAll() {
+  async findAll(querys:any) {
     try{
-      const data= await this.bookRepository.find();
-      if(!data){
+      const dataFilter= await this.bookFilter.resultData(this.bookRepository,querys);
+      if(!dataFilter){
         throw new errorManage({
           type:"NOT_FOUND",
           message:"Resgisters not found"
         });
       }
-      return data;
+      return dataFilter;
     }catch(err:any){
       throw errorManage.errorSignature(err.message);
     }
