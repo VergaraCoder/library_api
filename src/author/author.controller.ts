@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
@@ -9,7 +17,7 @@ export class AuthorController {
 
   @Post()
   async create(@Body() createAuthorDto: CreateAuthorDto) {
-    const dataAuthor= await this.authorService.create(createAuthorDto);
+    const dataAuthor = await this.authorService.create(createAuthorDto);
     return dataAuthor;
   }
 

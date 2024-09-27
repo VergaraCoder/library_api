@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -6,8 +15,7 @@ import { FilterBookService } from './filterQuery/book.filterQuery';
 
 @Controller('book')
 export class BookController {
-  constructor(private readonly bookService: BookService,
-  ) {}
+  constructor(private readonly bookService: BookService) {}
 
   @Post()
   create(@Body() createBookDto: CreateBookDto) {
@@ -16,25 +24,24 @@ export class BookController {
 
   @Get()
   asyncfindAll(
-    @Query("title") title:string,
-    @Query("date") date:Date,
-    @Query("page") pagination:number, 
-    @Query("limit") limit :number,
-    @Query("gender") gender:string,
-    @Query("sort") sort:string,
-    @Query("authorName") author:string,
-    @Query("authorId") authorId:number 
+    @Query('title') title: string,
+    @Query('date') date: Date,
+    @Query('page') pagination: number,
+    @Query('limit') limit: number,
+    @Query('gender') gender: string,
+    @Query('sort') sort: string,
+    @Query('authorName') author: string,
+    @Query('authorId') authorId: number,
   ) {
- 
     return this.bookService.findAll({
-      date:date,
-      title:title,
-      page:pagination,
-      limit:limit,
-      gender:gender,
-      sort:sort,
-      author:author,
-      authorId:authorId
+      date: date,
+      title: title,
+      page: pagination,
+      limit: limit,
+      gender: gender,
+      sort: sort,
+      author: author,
+      authorId: authorId,
     });
   }
 
@@ -45,7 +52,6 @@ export class BookController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    
     return this.bookService.update(id, updateBookDto);
   }
 

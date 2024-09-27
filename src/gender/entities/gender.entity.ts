@@ -1,15 +1,21 @@
-import { Book } from "src/book/entities/book.entity";
-import { Column, Entity, JoinTable, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Book } from 'src/book/entities/book.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity("genders")
+@Entity('genders')
 export class Gender {
-    @PrimaryGeneratedColumn()
-    id:number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name_gender:string;
+  @Column()
+  name_gender: string;
 
-
-    @ManyToMany(() => Book, (book) => book.gender)
-    books: Book[];
+  @ManyToMany(() => Book, (book) => book.gender)
+  books: Book[];
 }

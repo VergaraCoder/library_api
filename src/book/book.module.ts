@@ -11,13 +11,13 @@ import { GenderService } from 'src/gender/gender.service';
 import { FilterBookService } from './filterQuery/book.filterQuery';
 
 @Module({
-  imports:[
+  imports: [
     TypeOrmModule.forFeature([Book]),
     AuthorModule,
-    forwardRef(()=>GenderModule)
+    forwardRef(() => GenderModule),
   ],
   controllers: [BookController],
-  providers: [BookService,AuthorService,GenderService,FilterBookService],
-  exports:[TypeOrmModule]
+  providers: [BookService, AuthorService, GenderService, FilterBookService],
+  exports: [TypeOrmModule],
 })
 export class BookModule {}

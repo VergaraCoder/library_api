@@ -6,12 +6,9 @@ import { Gender } from './entities/gender.entity';
 import { BookModule } from 'src/book/book.module';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([Gender]),
-    forwardRef(()=>BookModule)
-  ],
+  imports: [TypeOrmModule.forFeature([Gender]), forwardRef(() => BookModule)],
   controllers: [GenderController],
   providers: [GenderService],
-  exports:[TypeOrmModule]
+  exports: [TypeOrmModule],
 })
 export class GenderModule {}
