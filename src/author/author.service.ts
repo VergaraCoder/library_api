@@ -14,8 +14,15 @@ export class AuthorService {
     private FilterAuthorService:FilterAuthorService
   ) {}
 
-  create(createAuthorDto: Partial<Author>) {
+  async create(createAuthorDto: Partial<Author>) {
     try {
+      const data=await this.findOne(" ",createAuthorDto.name);      
+      if(data){
+        throw new errorManage({
+          type:"CONFLICT",
+          message:"THE AUTHOR ALREADY EXIST"
+        });
+      }
       const createAuthor = this.authorRepository.create(createAuthorDto);
       return this.authorRepository.save(createAuthor);
     } catch (err: any) {
@@ -38,20 +45,22 @@ export class AuthorService {
     }
   }
 
-  async findOne(name: string) {
-    try {
+  async findOne(name: string, verifyCreation?:string) {
+    try {           
       const dataAuthor = await this.authorRepository.findOne({
-        where: { name: name },
+        where:[ { name: name }, {name:verifyCreation}],
       });
-      if (!dataAuthor) {
+      if (!dataAuthor && !verifyCreation) {
         throw new errorManage({
           type: 'NOT_FOUND',
           message: 'Incorret credentials',
         });
       }
-      await this.updateNumberOfBook(dataAuthor);
+      if(!verifyCreation){
+        await this.updateNumberOfBook(dataAuthor);
+      }
       return dataAuthor;
-    } catch (err: any) {
+    } catch (err: any) {     
       throw errorManage.errorSignature(err.message);
     }
   }
@@ -87,9 +96,9 @@ export class AuthorService {
   }
 
   async updateNumberOfBook(dataAuthor: any) {
-    try {
+    try {    
       const update = await this.authorRepository.update(dataAuthor.id, {
-        publishedBooks: dataAuthor.published_books + 1,
+        publishedBooks: dataAuthor.publishedBooks + 1,
       });
       return update;
     } catch (err: any) {

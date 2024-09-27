@@ -12,7 +12,7 @@ export class errorManage extends Error {
   }
 
   static errorSignature(message: string) {
-    const name = message.split(' :: ')[0];
+    const name = message.split(' :: ')[0];   
     if (name) {
       throw new HttpException(message, HttpStatus[name]);
     } else {

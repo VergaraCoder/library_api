@@ -21,6 +21,9 @@ export class BookService {
   async create(createBookDto: CreateBookDto) {
     const returnAuthor = await this.authorService.findOne(createBookDto.author);
     const genders = await this.genderService.findOne(createBookDto.gender);
+    
+    await this.verifyAuthors(createBookDto.author, createBookDto.title);
+
     const createBook = this.bookRepository.create({
       title: createBookDto.title,
       authorId: returnAuthor.id,
@@ -49,17 +52,18 @@ export class BookService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, title?:string) {
     try {
       const returnOneBook = await this.bookRepository.findOne({
-        where: { id: id },
+        where: [{ id: id },{title:title}],
       });
-      if (!returnOneBook) {
+      
+      if (!returnOneBook && !title) {        
         throw new errorManage({
           type: 'NOT_FOUND',
           message: 'Incorret Credenctials',
         });
-      }
+      }      
       return returnOneBook;
     } catch (err: any) {
       throw errorManage.errorSignature(err.message);
@@ -75,6 +79,27 @@ export class BookService {
       );
       return updateLog;
     } catch (err: any) {
+      throw errorManage.errorSignature(err.message);
+    }
+  }
+
+
+  async verifyAuthors(nameAuthor:string,title:string){
+    try{
+    const verifyBook=await this.findOne(" ",title);
+    if(!verifyBook){
+      return true;
+    }
+    const author=await this.authorService.findOne2(verifyBook.authorId);
+
+    if(nameAuthor == author.name){
+      throw new errorManage({
+        type:"BAD_REQUEST",
+        message:"THIS AUTHOR ALREADY PUBLISHED THAT BOOK"
+      });
+    }
+    return true;
+    }catch(err:any){
       throw errorManage.errorSignature(err.message);
     }
   }

@@ -12,21 +12,17 @@ export class HttpFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const request = host.switchToHttp().getRequest();
     const response = host.switchToHttp().getResponse();
-
-    console.log(exception.message);
-
     const ifExist = exception.message.split(' :: ');
     let message: any = '';
     let status: any = 0;
-    console.log(ifExist);
 
         if(exception.response.message){
             message="the properties are bad";
             status=400;
         }
         else if(ifExist){
-            message=ifExist;
-            status=parseInt(exception.message.split(" :: ")[0]);
+            message=ifExist[1];
+            status=HttpStatus[exception.message.split(" :: ")[0]];
         }
         else{
             message="INTERNAL SERVER ERROR";
