@@ -5,81 +5,100 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Author } from './entities/author.entity';
 import { Repository } from 'typeorm';
 import { errorManage } from 'src/common/err/error.manage.error';
+import { FilterAuthorService } from './filterService/filter.service';
 
 @Injectable()
 export class AuthorService {
-  constructor(@InjectRepository(Author) private authorRepository:Repository<Author>){}
+  constructor(
+    @InjectRepository(Author) private authorRepository: Repository<Author>,
+    private FilterAuthorService:FilterAuthorService
+  ) {}
 
   create(createAuthorDto: Partial<Author>) {
-    try{
-      const createAuthor=this.authorRepository.create(createAuthorDto);
+    try {
+      const createAuthor = this.authorRepository.create(createAuthorDto);
       return this.authorRepository.save(createAuthor);
-    }catch(err:any){
+    } catch (err: any) {
       throw errorManage.errorSignature(err.message);
     }
   }
 
-  async findAll() {
-    try{
-      const data=await this.authorRepository.find();
-      if(!data){
-      throw new errorManage({
-        type:"NOT_FOUND",
-        message:"Authores not found"
-      });
-    }
-    }catch(err:any){
+  async findAll(querys:any) {
+    try {
+      const data = await this.FilterAuthorService.returnResult(this.authorRepository,querys);
+      if (!data) {
+        throw new errorManage({
+          type: 'NOT_FOUND',
+          message: 'Authores not found',
+        });
+      }
+      return data;
+    } catch (err: any) {
       throw errorManage.errorSignature(err.message);
     }
   }
 
   async findOne(name: string) {
-    try{
-      const dataAuthor=await this.authorRepository.findOne({where:{name:name}});
-      if(!dataAuthor){
+    try {
+      const dataAuthor = await this.authorRepository.findOne({
+        where: { name: name },
+      });
+      if (!dataAuthor) {
         throw new errorManage({
-          type:"NOT_FOUND",
-          message:"Incorret credentials"
+          type: 'NOT_FOUND',
+          message: 'Incorret credentials',
         });
       }
-    return dataAuthor;
-    }catch(err:any){
+      await this.updateNumberOfBook(dataAuthor);
+      return dataAuthor;
+    } catch (err: any) {
       throw errorManage.errorSignature(err.message);
     }
   }
 
-
-    async findOne2(id:number) {
-    try{
-      const dataAuthor=await this.authorRepository.findOne({where:{id:id}});
-      if(!dataAuthor){
+  async findOne2(id: number) {
+    try {
+      const dataAuthor = await this.authorRepository.findOne({
+        where: { id: id },
+      });
+      if (!dataAuthor) {
         throw new errorManage({
-          type:"NOT_FOUND",
-          message:"Incorrect credentials"
+          type: 'NOT_FOUND',
+          message: 'Incorrect credentials',
         });
       }
       return dataAuthor;
-    }catch(err:any){
+    } catch (err: any) {
       throw errorManage.errorSignature(err.message);
     }
   }
 
-
   async update(id: number, updateAuthorDto: UpdateAuthorDto) {
-    try{
-      const dataReturn=await this.findOne2(id);
-      const updateLog=await this.authorRepository.update(dataReturn.id,updateAuthorDto);
+    try {
+      const dataReturn = await this.findOne2(id);
+      const updateLog = await this.authorRepository.update(
+        dataReturn.id,
+        updateAuthorDto,
+      );
       return updateLog;
-    }catch(err:any){
+    } catch (err: any) {
       throw errorManage.errorSignature(err.message);
+    }
+  }
+
+  async updateNumberOfBook(dataAuthor: any) {
+    try {
+      const update = await this.authorRepository.update(dataAuthor.id, {
+        publishedBooks: dataAuthor.published_books + 1,
+      });
+      return update;
+    } catch (err: any) {
+      throw err;
     }
   }
 
   async remove(id: number) {
-    const dataDelete=await this.authorRepository.delete({id:id});
+    const dataDelete = await this.authorRepository.delete({ id: id });
     return dataDelete;
   }
-
-
-
 }

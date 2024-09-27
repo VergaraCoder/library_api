@@ -6,19 +6,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmCredentials } from './common/dbConfig/db.config';
 
-
 @Module({
-  imports: [BookModule, GenderModule, AuthorModule,
-    ConfigModule.forRoot(
-      {
-        isGlobal:true,
-        envFilePath:".env"
-      }
-    ),
+  imports: [
+    BookModule,
+    GenderModule,
+    AuthorModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
     TypeOrmModule.forRootAsync({
-      imports:[ConfigModule],
-      useClass:typeOrmCredentials
-    })
+      imports: [ConfigModule],
+      useClass: typeOrmCredentials,
+    }),
   ],
   controllers: [],
   providers: [],

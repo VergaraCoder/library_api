@@ -1,20 +1,20 @@
-import { Book } from "src/book/entities/book.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Book } from 'src/book/entities/book.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity("authors")
+@Entity('authors')
 export class Author {
-    @PrimaryGeneratedColumn()
-    id:number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name:string;
+  @Column()
+  name: string;
 
-    @Column()
-    age:number;
+  @Column()
+  age: number;
 
-    @Column()
-    published_books:number;
+  @Column()
+  publishedBooks: number;
 
-    @OneToMany(()=>Book,book=>book.author)
-    book:Book[];
+  @OneToMany(() => Book, (book) => book.author)
+  book: Book[];
 }

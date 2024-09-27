@@ -4,14 +4,12 @@ import { GenderController } from './gender.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Gender } from './entities/gender.entity';
 import { BookModule } from 'src/book/book.module';
+import { FilterGender } from './filterService/filter.gender';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([Gender]),
-    forwardRef(()=>BookModule)
-  ],
+  imports: [TypeOrmModule.forFeature([Gender]), forwardRef(() => BookModule)],
   controllers: [GenderController],
-  providers: [GenderService],
-  exports:[TypeOrmModule]
+  providers: [GenderService,FilterGender],
+  exports: [TypeOrmModule],
 })
 export class GenderModule {}
