@@ -6,11 +6,22 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 export class FilterGender {
   async returnResult(repoGender: Repository<Gender>, querys: any) {
     const queryBuilder = repoGender.createQueryBuilder('genders');
-    await this.filterData(queryBuilder, querys);
+    return await this.filterData(queryBuilder, querys);
   }
 
   private async filterData(
     queryBuilder: SelectQueryBuilder<Gender>,
     querys: any,
-  ) {}
+  ) {
+
+      const limit=querys.limit ? querys.limit : 0;
+
+      const skip=querys.page ? querys.pase : 1 ;
+
+      querys.sort ? queryBuilder.orderBy("genders.name_gender",querys.sort.toLocaleUpperCase()) : "";
+
+      queryBuilder.skip((skip-1) * limit);
+      queryBuilder.take(limit);
+      return await queryBuilder.getMany();
+  }
 }

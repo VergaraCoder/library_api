@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { GenderService } from './gender.service';
 import { CreateGenderDto } from './dto/create-gender.dto';
@@ -21,8 +22,16 @@ export class GenderController {
   }
 
   @Get()
-  findAll() {
-    return this.genderService.findAll();
+  findAll(
+    @Query("page") page:number,
+    @Query("limit") limit:number,
+    @Query("sort") sort:string
+  ) {
+    return this.genderService.findAll({
+      page:page,
+      limit:limit,
+      sort:sort
+    });
   }
 
   @Get(':id')

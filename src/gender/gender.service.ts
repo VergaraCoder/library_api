@@ -5,11 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Gender } from './entities/gender.entity';
 import { Repository } from 'typeorm';
 import { errorManage } from 'src/common/err/error.manage.error';
+import { FilterGender } from './filterService/filter.gender';
 
 @Injectable()
 export class GenderService {
   constructor(
     @InjectRepository(Gender) private genderRepository: Repository<Gender>,
+    private filterGenderService:FilterGender
   ) {}
 
   async create(createGenderDto: CreateGenderDto) {
@@ -18,9 +20,9 @@ export class GenderService {
     return createGender;
   }
 
-  async findAll() {
+  async findAll(querys:any) {
     try {
-      const data = await this.genderRepository.find();
+      const data = await this.filterGenderService.returnResult(this.genderRepository,querys);
       if (!data) {
         throw new errorManage({
           type: 'NOT_FOUND',
