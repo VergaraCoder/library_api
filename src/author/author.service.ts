@@ -5,11 +5,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Author } from './entities/author.entity';
 import { Repository } from 'typeorm';
 import { errorManage } from 'src/common/err/error.manage.error';
+import { FilterAuthorService } from './filterService/filter.service';
 
 @Injectable()
 export class AuthorService {
   constructor(
     @InjectRepository(Author) private authorRepository: Repository<Author>,
+    private FilterAuthorService:FilterAuthorService
   ) {}
 
   create(createAuthorDto: Partial<Author>) {
@@ -21,15 +23,16 @@ export class AuthorService {
     }
   }
 
-  async findAll() {
+  async findAll(querys:any) {
     try {
-      const data = await this.authorRepository.find();
+      const data = await this.FilterAuthorService.returnResult(this.authorRepository,querys);
       if (!data) {
         throw new errorManage({
           type: 'NOT_FOUND',
           message: 'Authores not found',
         });
       }
+      return data;
     } catch (err: any) {
       throw errorManage.errorSignature(err.message);
     }
@@ -86,7 +89,7 @@ export class AuthorService {
   async updateNumberOfBook(dataAuthor: any) {
     try {
       const update = await this.authorRepository.update(dataAuthor.id, {
-        published_books: dataAuthor.published_books + 1,
+        publishedBooks: dataAuthor.published_books + 1,
       });
       return update;
     } catch (err: any) {

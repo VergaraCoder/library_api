@@ -13,7 +13,7 @@ export class Author {
   age: number;
 
   @Column()
-  published_books: number;
+  publishedBooks: number;
 
   @OneToMany(() => Book, (book) => book.author)
   book: Book[];

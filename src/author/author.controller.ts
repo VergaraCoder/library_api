@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
@@ -22,8 +23,30 @@ export class AuthorController {
   }
 
   @Get()
-  findAll() {
-    return this.authorService.findAll();
+  findAll(
+    @Query('age') age: number,
+    @Query('age_gt') age2: number,
+    @Query('age_lt') age3: number,
+    @Query('age_gte') age4: number,
+    @Query('age_lte') age5: number,
+    @Query('published') publis:number,
+    @Query('published_gt') publis2:number,
+    @Query('published_lt') publis3:number,
+    @Query('published_gte') publis4:number,
+    @Query('published_lte') publis5:number,
+  ) {
+    return this.authorService.findAll({
+      age:age,
+      age_gt:age2,
+      age_lt:age3,
+      age_gte:age4,
+      age_lte:age5,
+      publishedBooks:publis,
+      publishedBooks_gt:publis2,
+      publishedBooks_lt:publis3,
+      publishedBooks_gte:publis4,
+      publishedBooks_lte:publis5,
+    });
   }
 
   @Get(':id')
