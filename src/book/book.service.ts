@@ -21,10 +21,6 @@ export class BookService {
   async create(createBookDto: CreateBookDto) {
     const returnAuthor = await this.authorService.findOne(createBookDto.author);
     const genders = await this.genderService.findOne(createBookDto.gender);
-
-    console.log('los generos son');
-    console.log(genders);
-
     const createBook = this.bookRepository.create({
       title: createBookDto.title,
       authorId: returnAuthor.id,
