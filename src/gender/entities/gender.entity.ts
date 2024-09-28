@@ -2,7 +2,6 @@ import { Book } from 'src/book/entities/book.entity';
 import {
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
