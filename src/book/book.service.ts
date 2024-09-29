@@ -108,12 +108,4 @@ export class BookService {
     const dataDelete = await this.bookRepository.delete({ id: id });
     return dataDelete;
   }
-
-
-  hola(number:number){
-    return {
-      name:"hola",
-      number:number
-    }
-  }
 }

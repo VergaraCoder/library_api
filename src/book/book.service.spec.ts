@@ -15,9 +15,6 @@ import {getRepositoryToken} from '@nestjs/typeorm';
 
 describe('BookService', () => {
   let service: BookService;
-  let bookRepository: Repository<Book>;
-  let authorService: AuthorService;
-  let genderService: GenderService;
 
   const querys={
       date: new Date(),
@@ -30,67 +27,68 @@ describe('BookService', () => {
       authorId: 1,
   };
 
-  const mockupResponseFindAll=[
+  const mockupResponse=
     {
-      id:'179e5620-28aa-4cee-85b4-76e487b8f725',
-      title:"viuda",
-      publication_date:new Date(),
-      authorId:1,
-      gender:[
-        {
-          id:1,
-          name_gender:"comedia"
-        }
-      ]
+      id: '179e5620-28aa-4cee-85b4-76e487b8f725',
+      title: "viuda",
+      publication_date: new Date(),
+      authorId: 1,
+      author: { id: 1, name: "John Doe", age: 45, publishedBooks: 3, book: [] },
+      gender: [{ id: 1, name_gender: "comedia",books:[] }]
     }
-  ];
+  ;
 
-  const data=10;
 
-  const returnOBject={
-    name:"pedro",
-    number:10
-  }
 
   const mockupBookRepository={
-    create:jest.fn().mockResolvedValue([]),
-    findAll:jest.fn().mockResolvedValue([]),
-    findOne:jest.fn().mockResolvedValue([]),
-    update:jest.fn().mockResolvedValue([]),
-    delete:jest.fn().mockResolvedValue([]),
+    create:jest.fn().mockResolvedValue(mockupResponse),
+    findAll:jest.fn().mockResolvedValue([
+      mockupResponse
+    ]),
+    findOne:jest.fn().mockResolvedValue(mockupResponse),
+    update:jest.fn().mockResolvedValue(mockupResponse),
+    delete:jest.fn().mockResolvedValue(mockupResponse),
   }
 
 
-  const mockupAuthorService = {
-  findOne: jest.fn().mockResolvedValue({ id: 1, name: 'Author 1' }),
-};
+  
+const mockerAuthorService={
+  findOne:jest.fn().mockResolvedValue({
+     id: 1, name: "John Doe", age: 45, publishedBooks: 3, book: [] 
+  })
+}
 
-const mockupGenderService = {
-  findOne: jest.fn().mockResolvedValue({ id: 1, name: 'Genre 1' }),
-};
+const mockerGenderService={
+  findOne:jest.fn().mockResolvedValue([
+    {
+      id:1,
+      name_gender:"comedia"
+    }
+  ])
+}
 
-const mockupFilterBookService = {
-  resultData: jest.fn().mockResolvedValue([{ id: 1, title: 'Book 1' }]),
-};
 
-  const mockupGenderRepository={
+const mockerFilterBookService={
+  resultData:jest.fn().mockResolvedValue([mockupResponse])
+}
 
-  }
+
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        BookModule,
+        BookService,
         {
-          provide:BookRepo, useValue:mockupBookRepository
+         provide: getRepositoryToken(Book), useValue:mockupBookRepository
         },
-        {provide:AuthorService,useValue:mockupAuthorService},
-        {provide:GenderService , useValue:mockupGenderService},
-        {provide:FilterBookService, useValue:mockupFilterBookService}
+
+        {provide:AuthorService,useValue:mockerAuthorService},
+
+        {provide:GenderService , useValue:mockerGenderService},
+
+        {provide:FilterBookService, useValue:mockerFilterBookService}
       ],
     })
-    .overrideProvider(getRepositoryToken(Book))
-    .useValue(jest.fn())
     .compile();
 
 
@@ -100,4 +98,28 @@ const mockupFilterBookService = {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('shoulkd return this object',async ()=>{
+    const response=await service.findOne(mockupResponse.id);
+    expect(response).toBe(mockupResponse);
+  })
+
+  it('melo',async()=>{
+    const response=await service.findAll(querys);
+    expect(response).toEqual([mockupResponse]);
+  })
+
+  it('melo',async()=>{
+    const response=await service.update(mockupResponse.id,{
+      title:mockupResponse.title,
+      authorId:2
+    });
+    expect(response).toEqual(mockupResponse);
+  })
+
+  it('melo',async()=>{
+    const response=await service.remove(mockupResponse.id);
+    expect(response).toEqual(mockupResponse);
+  })
+
 });
